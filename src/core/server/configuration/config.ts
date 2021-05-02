@@ -4,7 +4,20 @@ export const DEFAULT_CONFIG = {
     MAPS: [
         // Inner City
         {
-            vehicles: ['visione'],
+            vehicles: [
+                'visione',
+                'prototipo',
+                'xa21',
+                'tyrus',
+                'turismor',
+                'tempesta',
+                't20',
+                'reaper',
+                'le7b',
+                'osiris',
+                'banshee2',
+                'pfister811',
+            ],
             maxScore: 10,
             roundTimer: 60000 * 8,
             atmosphere: {

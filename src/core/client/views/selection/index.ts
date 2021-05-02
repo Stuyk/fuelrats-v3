@@ -9,10 +9,12 @@ import { loadModel } from '../../utility/model';
 const url = `http://resource/client/views/selection/html/index.html`;
 let view: View;
 let vehicle: number;
+let vehicles: Array<string> = [];
 let startPosition: alt.IVector3 = { x: 0, y: 0, z: 0 };
 
-async function handleOpenSelection(_startPosition: alt.IVector3) {
+async function handleOpenSelection(_startPosition: alt.IVector3, _vehicles: Array<string>) {
     startPosition = _startPosition;
+    vehicles = _vehicles;
 
     view = await View.getInstance(url, true, false);
     view.on('selector:Ready', handleReady);
@@ -23,7 +25,7 @@ async function handleOpenSelection(_startPosition: alt.IVector3) {
 }
 
 function handleReady() {
-    // Something about loading valid vehicles...
+    view.emit('selector:SetVehicles', vehicles);
 }
 
 function destroyVehicle() {
@@ -57,6 +59,13 @@ async function handleSetSelection(model: string) {
     native.setPedComponentVariation(alt.Player.local.scriptID, 11, 243, 0, 2);
     native.setPedComponentVariation(alt.Player.local.scriptID, 15, 96, 0, 2);
     native.setPedPropIndex(alt.Player.local.scriptID, 0, 18, 0, true);
+
+    alt.nextTick(() => {
+        native.setVehicleEngineOn(vehicle, true, false, false);
+        native.startAudioScene('DLC_MPHEIST_TRANSITION_TO_APT_FADE_IN_RADIO_SCENE');
+        native.setVehRadioStation(vehicle, 'OFF');
+        native.setRadioToStationName('OFF');
+    });
 }
 
 function handleSelection(model: string) {

@@ -1,5 +1,6 @@
 import * as alt from 'alt-client';
 import EventNames from '../../shared/enums/EventNames';
+import { playFrontendSound } from '../systems/audio';
 import { drawText2d } from '../utility/text';
 
 let interval;
@@ -13,6 +14,10 @@ function handleUpdate(_milliseconds) {
     }
 
     milliseconds = _milliseconds;
+
+    if (milliseconds < 10000) {
+        playFrontendSound('SKIP', 'HUD_FRONTEND_DEFAULT_SOUNDSET');
+    }
 }
 
 function handleTick() {
@@ -21,6 +26,10 @@ function handleTick() {
     }
 
     if (!milliseconds) {
+        return;
+    }
+
+    if (milliseconds <= 1) {
         return;
     }
 

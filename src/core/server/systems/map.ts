@@ -11,7 +11,6 @@ const MaxRoundTimer = 60000 * 3;
 let initialized = false;
 let paused = false;
 let currentMapIndex = 0;
-let nextCanisterPickup = Date.now() + 1000;
 let endTime = Date.now() + MaxRoundTimer;
 
 export class MapController {
@@ -19,6 +18,12 @@ export class MapController {
         initialized = true;
     }
 
+    /**
+     * Get current map information.
+     * @static
+     * @return {*}  {IMapData}
+     * @memberof MapController
+     */
     static getCurrentMap(): IMapData {
         if (!initialized) {
             MapController.init();
@@ -27,6 +32,12 @@ export class MapController {
         return DEFAULT_CONFIG.MAPS[currentMapIndex];
     }
 
+    /**
+     * Get the current pause state of the map.
+     * @static
+     * @return {*}  {boolean}
+     * @memberof MapController
+     */
     static getPauseState(): boolean {
         if (!initialized) {
             MapController.init();
@@ -35,6 +46,12 @@ export class MapController {
         return paused;
     }
 
+    /**
+     * Get time left in this map's round in milliseconds
+     * @static
+     * @return {*}  {number}
+     * @memberof MapController
+     */
     static getTimeLeft(): number {
         const timeLeft = endTime - Date.now();
 
@@ -46,6 +63,12 @@ export class MapController {
         return timeLeft;
     }
 
+    /**
+     * Check if the max score has been exceeded for the map.
+     * @static
+     * @return {*}  {boolean}
+     * @memberof MapController
+     */
     static isScoreExceeded(): boolean {
         const maxScore = MapController.getCurrentMap().maxScore;
         const players = [...alt.Player.all];
@@ -70,10 +93,22 @@ export class MapController {
         return exceeded;
     }
 
+    /**
+     * Set the current pause state for the map.
+     * Used to update the gamemode without breaking stuff.
+     * @static
+     * @param {boolean} value
+     * @memberof MapController
+     */
     static setPauseState(value: boolean) {
         paused = value;
     }
 
+    /**
+     * Increments the map list.
+     * @static
+     * @memberof MapController
+     */
     static nextMap() {
         currentMapIndex += 1;
 
@@ -88,7 +123,7 @@ export class MapController {
      * @memberof MapController
      */
     static setupMap() {
-        paused = true;
+        MapController.setPauseState(true);
         let isNewMap = false;
 
         if (this.isScoreExceeded()) {
@@ -97,7 +132,6 @@ export class MapController {
         }
 
         const players = [...alt.Player.all];
-
         for (let i = 0; i < players.length; i++) {
             const player = players[i];
 
@@ -125,8 +159,25 @@ export class MapController {
         }
 
         endTime = Date.now() + MaxRoundTimer;
-        paused = false;
+        MapController.setPauseState(false);
     }
 
-    static reset() {}
+    /**
+     * Tells the map that a score just happened.
+     * @static
+     * @param {alt.Player} player
+     * @memberof MapController
+     */
+    static score(player: alt.Player) {
+        let currentScore = player.getSyncedMeta(EventNames.META_SCORE);
+
+        if (!currentScore) {
+            currentScore = 1;
+        } else {
+            currentScore += 1;
+        }
+
+        player.setSyncedMeta(EventNames.META_SCORE, currentScore);
+        MapController.setupMap();
+    }
 }

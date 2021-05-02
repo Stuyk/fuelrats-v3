@@ -24,7 +24,12 @@ export function openSelection(player: alt.Player) {
     player.visible = false;
     player.setSyncedMeta(EventNames.META_READY, false);
     player.setSyncedMeta(EventNames.META_CANISTER, false);
-    alt.emitClient(player, EventNames.TO_CLIENT_OPEN_VEHICLE_SELECT, DEFAULT_CONFIG.VEHICLE_SELECT_SPAWN);
+    alt.emitClient(
+        player,
+        EventNames.TO_CLIENT_OPEN_VEHICLE_SELECT,
+        DEFAULT_CONFIG.VEHICLE_SELECT_SPAWN,
+        MapController.getCurrentMap().vehicles
+    );
 }
 
 /**
@@ -48,6 +53,7 @@ export function finishSelection(player: alt.Player, model: string) {
     player.lastVehicle = new alt.Vehicle(model, map.spawn.x, map.spawn.y, map.spawn.z, 0, 0, 0);
     player.lastVehicle.customPrimaryColor = new alt.RGBA(255, 255, 255, 255);
     player.lastVehicle.customSecondaryColor = new alt.RGBA(255, 255, 255, 255);
+    player.lastVehicle.engineOn = true;
 
     alt.emitClient(player, EventNames.TO_CLIENT_SET_INTO_VEHICLE, player.lastVehicle);
 }
