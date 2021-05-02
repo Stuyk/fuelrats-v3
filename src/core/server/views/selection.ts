@@ -27,7 +27,14 @@ export function openSelection(player: alt.Player) {
     alt.emitClient(player, EventNames.TO_CLIENT_OPEN_VEHICLE_SELECT, DEFAULT_CONFIG.VEHICLE_SELECT_SPAWN);
 }
 
-function finishSelection(player: alt.Player, model: string) {
+/**
+ * Force finish selection.
+ * @export
+ * @param {alt.Player} player
+ * @param {string} model
+ * @return {*}
+ */
+export function finishSelection(player: alt.Player, model: string) {
     if (!player.isSelecting) {
         player.kick('Invalid State');
         return;

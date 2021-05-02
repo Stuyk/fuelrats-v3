@@ -24,5 +24,17 @@ function handleTick() {
         return;
     }
 
-    drawText2d(`${(milliseconds / 1000).toFixed(0)}s`, { x: 0.5, y: 0.05 }, 0.6, 255, 255, 255, 255);
+    drawText2d(`~p~Time Left~n~~w~${convert(milliseconds)}`, { x: 0.5, y: 0.025 }, 0.6, 255, 255, 255, 255);
+}
+
+function convert(milliseconds) {
+    var day, hour, minute, seconds;
+    seconds = Math.floor(milliseconds / 1000);
+    minute = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+    hour = Math.floor(minute / 60);
+    minute = minute % 60;
+    day = Math.floor(hour / 24);
+    hour = hour % 24;
+    return `${minute.toFixed(0)}m ${seconds.toFixed(0)}s`;
 }
