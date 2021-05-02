@@ -9,3 +9,8 @@ modules/
 data/
 *.log
 cache/
+fuelrats-cache/
+cdn_upload
+tsconfig.tsbuildinfo
+.env
+crashdumps

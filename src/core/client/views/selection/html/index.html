@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<head>
+    <title>Vehicle Selection</title>
+    <link rel="stylesheet/less" type="text/css" href="./style.less" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+    <div id="app">
+        <v-app v-cloak>
+            <div class="main-container">
+                <div class="selection">
+                    <div class="stack">
+                        <span class="overline grow">select a vehicle</span>
+                        <div class="split mt-1">
+                            <button @click="prev">prev</button>
+                            <span class="overline grow">{{ this.vehicles[0].toUpperCase() }}</span>
+                            <button @click="next">next</button>
+                        </div>  
+                        <button class="mt-1 grow" @click="select">select</button>
+                    </div>  
+                    
+                </div>
+            </div>
+        </v-app>
+    </div>
+    <script src="../../js/vue.min.js"></script>
+    <script src="../../js/less.min.js"></script>
+    <script src="./app.js" type="text/javascript"></script>
+</body>
+</html>

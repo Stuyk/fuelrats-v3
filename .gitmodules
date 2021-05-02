@@ -1,0 +1,6 @@
+[submodule "src/altv-ares"]
+	path = src/altv-ares
+	url = git@github.com:Stuyk/altv-ares.git
+[submodule "addon-resources/altv-ares"]
+	path = addon-resources/altv-ares
+	url = git@github.com:Stuyk/altv-ares.git

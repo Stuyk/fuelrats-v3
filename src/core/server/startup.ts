@@ -1,3 +1,11 @@
-import * as alt from 'alt-server';
+// Load Order
+import './extensions/Player';
 
-alt.log(`Hello from alt:V Server.`);
+// Systems
+import './systems/login';
+import './systems/timer';
+
+// Timers
+import './timers/cleanVehicles';
+import './timers/updateRoundTime';
+import './timers/updatePositions';

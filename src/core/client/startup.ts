@@ -1,3 +1,11 @@
-import * as alt from 'alt-client';
+import './extensions/view';
 
-alt.log(`Hello from alt:V Client`);
+// Systems
+import './systems/nametags';
+import './systems/vehicle';
+
+// Timers
+import './timers/updateRoundTime';
+
+// Views
+import './views/selection/index';
