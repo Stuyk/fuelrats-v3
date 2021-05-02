@@ -5,6 +5,7 @@ const MAX_ATTEMPTS = 200;
 
 export async function loadModel(model: string): Promise<boolean> {
     const hash = alt.hash(model);
+    native.requestModel(hash);
     let attempts = 0;
 
     return new Promise((resolve) => {
@@ -16,7 +17,6 @@ export async function loadModel(model: string): Promise<boolean> {
             }
 
             if (!native.hasModelLoaded(hash)) {
-                native.requestModel(hash);
                 attempts += 1;
                 return;
             }

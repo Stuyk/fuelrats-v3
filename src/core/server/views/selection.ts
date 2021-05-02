@@ -54,6 +54,8 @@ export function finishSelection(player: alt.Player, model: string) {
     player.lastVehicle.customPrimaryColor = new alt.RGBA(255, 255, 255, 255);
     player.lastVehicle.customSecondaryColor = new alt.RGBA(255, 255, 255, 255);
     player.lastVehicle.engineOn = true;
+    player.setDateTime(1, 1, 2021, map.atmosphere.hour, map.atmosphere.minute, 0);
+    player.setWeather(map.atmosphere.weather);
 
     alt.emitClient(player, EventNames.TO_CLIENT_SET_INTO_VEHICLE, player.lastVehicle);
 }

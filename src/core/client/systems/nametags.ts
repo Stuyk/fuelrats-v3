@@ -9,13 +9,16 @@ let interval = alt.setInterval(drawNametags, 0);
  * Toggled on through an interval.
  */
 function drawNametags() {
-    if (!alt.Player.local.getSyncedMeta(EventNames.META_READY)) {
+    native.drawRect(0, 0, 0, 0, 0, 0, 0, 0, false);
+
+    if (!alt.Player.local || !alt.Player.local.getSyncedMeta(EventNames.META_READY)) {
         return;
     }
 
     for (let i = 0, n = alt.Player.all.length; i < n; i++) {
         let player = alt.Player.all[i];
-        if (!player.valid) {
+
+        if (!player || !player.valid) {
             continue;
         }
 
@@ -23,7 +26,7 @@ function drawNametags() {
             continue;
         }
 
-        const name = player.getSyncedMeta(EventNames.META_NAME);
+        let name = player.getSyncedMeta(EventNames.META_NAME);
         if (!name) {
             continue;
         }
@@ -33,9 +36,13 @@ function drawNametags() {
             continue;
         }
 
-        const isChatting = player.getSyncedMeta('CHATTING');
-        const pos = { ...native.getPedBoneCoords(player.scriptID, 12844, 0, 0, 0) };
+        let pos = { ...native.getPedBoneCoords(player.scriptID, 12844, 0, 0, 0) };
         pos.z += 0.75;
+
+        if (player.vehicle) {
+            pos = { ...player.vehicle.pos };
+            pos.z += 0.75;
+        }
 
         let scale = 1 - (0.8 * dist) / drawDistance;
         let fontSize = 0.6 * scale;
@@ -43,6 +50,8 @@ function drawNametags() {
         const entity = player.vehicle ? player.vehicle.scriptID : player.scriptID;
         const vector = native.getEntityVelocity(entity);
         const frameTime = native.getFrameTime();
+        const hasFuel = player.getSyncedMeta(EventNames.META_CANISTER);
+        const newName = hasFuel ? `~r~[CANISTER]~n~${name}` : `${name}`;
 
         // Names
         native.setDrawOrigin(
@@ -58,7 +67,7 @@ function drawNametags() {
         native.setTextCentre(true);
         native.setTextColour(255, 255, 255, 255);
         native.setTextOutline();
-        native.addTextComponentSubstringPlayerName(isChatting ? `${name}~r~*` : `${name}`);
+        native.addTextComponentSubstringPlayerName(newName);
         native.endTextCommandDisplayText(0, 0, 0);
         native.clearDrawOrigin();
     }

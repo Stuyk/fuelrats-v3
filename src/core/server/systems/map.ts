@@ -4,6 +4,7 @@ import { IMapData } from '../../shared/interface/MapData';
 import { DEFAULT_CONFIG } from '../configuration/config';
 import { distance } from '../utility/vector';
 import { finishSelection, openSelection } from '../views/selection';
+import { CanisterController } from './canister';
 import { TimerController } from './timer';
 
 const MaxRoundTimer = 60000 * 3;
@@ -12,10 +13,12 @@ let initialized = false;
 let paused = false;
 let currentMapIndex = 0;
 let endTime = Date.now() + MaxRoundTimer;
+let spawnProtectionTimeout;
 
 export class MapController {
     static init() {
         initialized = true;
+        CanisterController.reset();
     }
 
     /**
@@ -118,6 +121,26 @@ export class MapController {
     }
 
     /**
+     * Used to apply meta to everyone.
+     * @static
+     * @param {string} metaName
+     * @param {*} value
+     * @memberof MapController
+     */
+    static applyMetaToAll(metaName: string, value: any) {
+        const players = [...alt.Player.all];
+        for (let i = 0; i < players.length; i++) {
+            const player = players[i];
+
+            if (!player.valid) {
+                continue;
+            }
+
+            player.setSyncedMeta(metaName, value);
+        }
+    }
+
+    /**
      * Used to setup the map after a player scores.
      * @static
      * @memberof MapController
@@ -131,6 +154,7 @@ export class MapController {
             isNewMap = true;
         }
 
+        const map = MapController.getCurrentMap();
         const players = [...alt.Player.all];
         for (let i = 0; i < players.length; i++) {
             const player = players[i];
@@ -140,6 +164,9 @@ export class MapController {
             }
 
             player.setSyncedMeta(EventNames.META_SCORE, 0);
+            player.setSyncedMeta(EventNames.META_SPAWN_PROTECTION, true);
+            player.setDateTime(1, 1, 2021, map.atmosphere.hour, map.atmosphere.minute, 0);
+            player.setWeather(map.atmosphere.weather);
 
             if (!player.getSyncedMeta(EventNames.META_READY)) {
                 continue;
@@ -158,7 +185,17 @@ export class MapController {
             }
         }
 
+        if (spawnProtectionTimeout) {
+            alt.clearTimeout(spawnProtectionTimeout);
+            spawnProtectionTimeout = null;
+        }
+
+        spawnProtectionTimeout = alt.setTimeout(() => {
+            MapController.applyMetaToAll(EventNames.META_SPAWN_PROTECTION, false);
+        }, DEFAULT_CONFIG.SPAWN_PROTECTION);
+
         endTime = Date.now() + MaxRoundTimer;
+        CanisterController.reset();
         MapController.setPauseState(false);
     }
 

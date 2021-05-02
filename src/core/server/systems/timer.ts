@@ -58,4 +58,4 @@ export class TimerController {
     }
 }
 
-alt.setInterval(TimerController.handleTick, 100);
+alt.setInterval(TimerController.handleTick, 50);

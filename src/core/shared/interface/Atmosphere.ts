@@ -1,5 +1,5 @@
 export interface IAtmosphere {
-    hour: number;
-    minute: number;
-    weather: number;
+    hour: any | number;
+    minute: any | number;
+    weather: any | number;
 }

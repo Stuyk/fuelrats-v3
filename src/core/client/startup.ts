@@ -1,6 +1,7 @@
 import './extensions/view';
 
 // Systems
+import './systems/canister';
 import './systems/nametags';
 import './systems/vehicle';
 

@@ -5,7 +5,7 @@ const app = new Vue({
     el: '#app',
     data() {
         return {
-            vehicles: ['infernus', 'washington'],
+            vehicles: ['infernus'],
         };
     },
     methods: {
@@ -35,6 +35,7 @@ const app = new Vue({
         },
         setVehicles(vehicles) {
             this.vehicles = vehicles;
+            this.update();
         },
     },
     mounted() {
