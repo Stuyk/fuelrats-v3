@@ -6,6 +6,7 @@ export default {
     TO_CLIENT_OPEN_VEHICLE_SELECT: 'to:Client:OpenVehicleSelection',
     TO_CLIENT_UPDATE_TIMER: 'to:Client:UpdateTimer',
     TO_CLIENT_CANISTER: 'to:Client:UpdateCanister',
+    TO_CLIENT_GOAL: 'to:Client:Goal',
     TO_SERVER_SELECT_VEHICLE: 'to:Server:SelectVehicle',
     TO_SERVER_WEBVIEWS_INITIALIZED: 'to:Server:WebviewsInitialized',
     META_SPAWN_PROTECTION: 'Meta:SpawnProtection',

@@ -1,9 +1,14 @@
 import * as alt from 'alt-server';
+import { MapController } from '../systems/map';
 import { TimerController } from '../systems/timer';
 
 TimerController.registerTimer('Clean Vehicles', 5000, handleUpdate);
 
 function handleUpdate() {
+    if (MapController.getPauseState()) {
+        return;
+    }
+
     const vehicles = [...alt.Vehicle.all];
     let destroyedCount = 0;
 

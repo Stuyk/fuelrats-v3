@@ -9,5 +9,6 @@ import './systems/timer';
 
 import './timers/cleanVehicles';
 import './timers/updateCanister';
+import './timers/updateGoal';
 import './timers/updateRoundTime';
 import './timers/updatePositions';

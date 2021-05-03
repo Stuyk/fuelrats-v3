@@ -2,6 +2,7 @@ import './extensions/view';
 
 // Systems
 import './systems/canister';
+import './systems/goal';
 import './systems/nametags';
 import './systems/vehicle';
 

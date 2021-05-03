@@ -17,6 +17,21 @@ export class CanisterController {
     }
 
     /**
+     * Check if a player is the owner of the canister.
+     * @static
+     * @param {alt.Player} player
+     * @return {*}  {boolean}
+     * @memberof CanisterController
+     */
+    static isOwner(player: alt.Player): boolean {
+        if (holder && holder.id === player.id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Create the initial canister.
      * @static
      * @memberof CanisterController
@@ -32,7 +47,6 @@ export class CanisterController {
         }
 
         const pos = CanisterController.randomPosition();
-
         holder = null;
         canister = {
             pos,
@@ -41,9 +55,8 @@ export class CanisterController {
         };
         colshape = new CanisterShape(pos.x, pos.y, pos.z, 1.5);
         colshape.playersOnly = false;
-
-        alt.log(`[Fuel Rats] Canister has been reset.`);
         alt.emitClient(null, EventNames.TO_CLIENT_CANISTER, canister);
+        alt.log(`[Fuel Rats] Canister has been reset.`);
     }
 
     /**
@@ -115,6 +128,10 @@ export class CanisterController {
      * @memberof CanisterController
      */
     static update() {
+        if (MapController.getPauseState()) {
+            return;
+        }
+
         // Likely Holder Disconnected Here
         if (canister.taken && (!holder || !holder.valid)) {
             holder = null;
@@ -143,6 +160,10 @@ export class CanisterController {
      * @memberof CanisterController
      */
     static enter(colshape: CanisterShape, entity: alt.Entity) {
+        if (MapController.getPauseState()) {
+            return;
+        }
+
         if (!colshape.isCanister) {
             return;
         }

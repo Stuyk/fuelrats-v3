@@ -19,7 +19,7 @@ export const DEFAULT_CONFIG = {
                 'banshee2',
                 'pfister811',
             ],
-            maxScore: 10,
+            maxScore: 1,
             atmosphere: {
                 hour: 12,
                 minute: 0,

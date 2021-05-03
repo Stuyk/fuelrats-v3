@@ -17,28 +17,32 @@ async function handleOpenSelection(_startPosition: alt.IVector3, _vehicles: Arra
     vehicles = _vehicles;
 
     view = await View.getInstance(url, true, false);
-    view.on('selector:Ready', handleReady);
+    view.on('selector:Ready', handleLoad);
     view.on('selector:SetSelection', handleSetSelection);
     view.on('selector:Select', handleSelection);
-
+    view.isVisible = false;
+    native.doScreenFadeOut(0);
     alt.toggleGameControls(false);
 }
 
-function handleReady() {
+async function handleLoad() {
+    const promises = vehicles.map((vehicle) => loadModel(vehicle));
+    await Promise.all(promises);
+
+    view.isVisible = true;
     view.emit('selector:SetVehicles', vehicles);
 }
 
-function destroyVehicle() {
+async function handleSetSelection(model: string) {
+    native.doScreenFadeIn(0);
+
     if (vehicle) {
         native.deleteEntity(vehicle);
     }
 
-    vehicle = null;
-}
+    alt.log(`CREATED VEHICLE: ${model}`);
 
-async function handleSetSelection(model: string) {
-    await destroyVehicle();
-    await loadModel(model);
+    destroyEntityEditCamera();
 
     const hash = native.getHashKey(model);
     vehicle = native.createVehicle(hash, startPosition.x, startPosition.y, startPosition.z, 0, false, false, false);
@@ -47,6 +51,7 @@ async function handleSetSelection(model: string) {
     native.freezeEntityPosition(vehicle, true);
 
     createEntityEditCamera(vehicle, 4, true);
+
     native.setEntityHeading(vehicle, 46);
     native.setPedIntoVehicle(alt.Player.local.scriptID, vehicle, -1);
     native.setPedConfigFlag(alt.Player.local.scriptID, 32, false);
@@ -68,16 +73,16 @@ async function handleSetSelection(model: string) {
     });
 }
 
-function handleSelection(model: string) {
-    alt.emitServer(EventNames.TO_SERVER_SELECT_VEHICLE, model);
-    destroyEntityEditCamera();
-    destroyVehicle();
-
-    if (view) {
-        view.close();
+async function handleSelection(model: string) {
+    if (vehicle) {
+        native.deleteEntity(vehicle);
     }
 
+    await destroyEntityEditCamera();
+
+    view.close();
     alt.toggleGameControls(true);
+    alt.emitServer(EventNames.TO_SERVER_SELECT_VEHICLE, model);
 }
 
 alt.onServer(EventNames.TO_CLIENT_OPEN_VEHICLE_SELECT, handleOpenSelection);

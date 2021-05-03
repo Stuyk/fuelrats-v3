@@ -41,9 +41,10 @@ const app = new Vue({
     mounted() {
         if ('alt' in window) {
             alt.on('selector:SetVehicles', this.setVehicles);
-            alt.emit('selector:Ready');
-        }
 
-        this.update();
+            setTimeout(() => {
+                alt.emit('selector:Ready');
+            }, 1500);
+        }
     },
 });

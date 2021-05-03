@@ -10,6 +10,8 @@ import { MapController } from '../systems/map';
  * @param {alt.Player} player
  */
 export function openSelection(player: alt.Player) {
+    alt.log('OPEN SELECTION');
+
     if (player.lastVehicle) {
         try {
             player.lastVehicle.destroy();

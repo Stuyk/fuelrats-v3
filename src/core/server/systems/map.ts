@@ -5,6 +5,7 @@ import { DEFAULT_CONFIG } from '../configuration/config';
 import { distance } from '../utility/vector';
 import { finishSelection, openSelection } from '../views/selection';
 import { CanisterController } from './canister';
+import { GoalController } from './goal';
 import { TimerController } from './timer';
 
 const MaxRoundTimer = 60000 * 3;
@@ -19,6 +20,7 @@ export class MapController {
     static init() {
         initialized = true;
         CanisterController.reset();
+        GoalController.reset();
     }
 
     /**
@@ -163,6 +165,7 @@ export class MapController {
                 continue;
             }
 
+            player.setSyncedMeta(EventNames.META_CANISTER, false);
             player.setSyncedMeta(EventNames.META_SCORE, 0);
             player.setSyncedMeta(EventNames.META_SPAWN_PROTECTION, true);
             player.setDateTime(1, 1, 2021, map.atmosphere.hour, map.atmosphere.minute, 0);
@@ -195,6 +198,7 @@ export class MapController {
         }, DEFAULT_CONFIG.SPAWN_PROTECTION);
 
         endTime = Date.now() + MaxRoundTimer;
+        GoalController.reset();
         CanisterController.reset();
         MapController.setPauseState(false);
     }

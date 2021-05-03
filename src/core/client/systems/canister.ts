@@ -29,6 +29,10 @@ if (!modelLoaded) {
 function getSprite(): number {
     let sprite = SPRITE_CANISTER;
 
+    if (!canister || !canister.pos) {
+        return SPRITE_CANISTER;
+    }
+
     if (alt.Player.local.pos.z - 2 > canister.pos.z) {
         sprite = SPRITE_LOWER;
     }
@@ -49,11 +53,11 @@ async function handleCanister(_canister: ICanister) {
 
     if (!blip) {
         blip = new alt.PointBlip(canister.pos.x, canister.pos.y, canister.pos.z);
+        blip.shortRange = false;
     }
 
     blip.pos = { ...canister.pos } as alt.Vector3;
     blip.sprite = getSprite();
-    blip.shortRange = false;
     blip.color = 1;
     blip.name = 'Canister';
     blip.priority = 99;
@@ -103,6 +107,10 @@ function moveCanister(vehicle: alt.Vehicle, skipEntityCheck: boolean = false) {
             0,
             false
         );
+    } else {
+        native.detachEntity(object, false, false);
+        native.setEntityCoordsNoOffset(object, canister.pos.x, canister.pos.y, canister.pos.z, false, false, false);
+        native.setEntityCollision(object, false, false);
     }
 }
 
@@ -121,6 +129,10 @@ function updateCanisterPosition(player: alt.Player, closeEnough: boolean) {
 }
 
 function drawCanisterMarker() {
+    if (!alt.Player.local.getSyncedMeta(EventNames.META_READY)) {
+        return;
+    }
+
     if (!canister) {
         return;
     }
